@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+     "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+     "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="user" extends="struts-default" namespace="/user">
+		<!-- 通用友好异常界面 -->
+		<global-results>
+			<result name="catchError" type="redirect">/catchError.html</result>
+		</global-results>
+		
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="loginOk" type="redirectAction">
+				<param name="namespace">/dept</param>
+				<param name="actionName">dept_queryAll</param>
+			</result>
+			<result name="loginError" type="dispatcher">/user/login.jsp</result>
+			<result name="registOk"  type="dispatcher">/user/regist.jsp</result>
+			<result name="registError" type="dispatcher">/user/regist.jsp</result>
+			<result name="escOk" type="redirect">/user/login.jsp</result>
+		</action>
+		
+		<action name="image" class="imgAction" method="execute"></action>
+	</package>
+
+	<include file="struts/struts_dept.xml"></include>
+ 	
+</struts>

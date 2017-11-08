@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongkeruan.dao.EmptDao">
+	
+	<resultMap type="empt" id="e1">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<association property="dept" javaType="dept">
+			<id column="parentId" property="id"/>
+			<result column="deptName" property="name"/>
+		</association>
+	</resultMap>
+	
+	<insert id="add" parameterType="empt" >
+		insert into a_empt
+		values(#{id},#{name},#{dept.id})
+	</insert>
+	
+	<delete id="delete" parameterType="String">
+		delete from a_empt where id=#{a}
+	</delete>
+	
+	<update id="update" parameterType="empt">
+		update  a_empt
+		set name=#{name},parentId=#{dept.id} where id=#{id} 
+	</update>
+	
+	<select id="selectEmpt" parameterType="String" resultMap="e1">
+		select e.id,e.name,e.parentId,d.name as deptName
+		from a_empt e left join a_dept d
+		on e.parentId=d.id
+		where e.id=#{a}
+	</select>
+	
+	<select id="selectAll" parameterType="String" resultMap="e1">
+		select e.id,e.name,e.parentId,d.name as deptName
+		from a_empt e left join a_dept d
+		on e.parentId=d.id
+		where e.parentId=#{a}
+	</select>
+	
+</mapper>

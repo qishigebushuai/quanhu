@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:context="http://www.springframework.org/schema/context" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/tx 
+                           http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+                           http://www.springframework.org/schema/aop 
+                           http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+        <!-- 配置dataSource连接池 -->                   
+        <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+			<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+			<property name="url" value="jdbc:mysql://localhost:3306/liupanshui"/>
+			<property name="username" value="root"/>
+			<property name="password" value="392485362"/>
+		</bean>                  
+		
+		<!-- 配置sqlSessionFactory -->
+		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+			<property name="dataSource" ref="dataSource"/>
+			<property name="mapperLocations" value="classpath:mapper/*.xml"/>
+			<property name="typeAliasesPackage" value="com.zhongkeruan.entity"/>
+		</bean>
+         
+        <!-- 配置dao -->
+       <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+			<property name="basePackage" value="com.zhongkeruan.dao"/>
+			<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+		</bean>  
+        
+        
+        <!-- 通过Spring工厂进行事务控制 --> 
+		<!-- 1,创建事务管理器 -->
+		<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+			<property name="dataSource" ref="dataSource"/>
+		</bean>
+		<!-- 2,事务细粒度配置 -->
+		<tx:advice id="txAdvice" transaction-manager="transactionManager">
+			<tx:attributes>
+				<tx:method name="find*" propagation="SUPPORTS"/>
+				<tx:method name="query*" propagation="SUPPORTS"/>
+				<tx:method name="get*" propagation="SUPPORTS"/>
+				<tx:method name="update*"/>
+				<tx:method name="delete*"/>
+				<tx:method name="save*"/>
+				<tx:method name="insert*"/>
+				<tx:method name="add*"/>
+			</tx:attributes>
+		</tx:advice>
+	
+		<!-- 3,配置事务的切面
+			 proxy-target-class   使用cglib生成代理对象
+		 -->
+		<aop:config proxy-target-class="true">
+			<aop:pointcut expression="execution(* baizhi.chens.service..*.*(..))" id="pc"/>
+			<aop:advisor advice-ref="txAdvice" pointcut-ref="pc"/>
+		</aop:config>                    
+	
+	  <!-- 导入小羽毛 -->		
+      <import resource="classpath:spring/spring_user.xml"/> 
+      <import resource="classpath:spring/spring_dept.xml"/>
+      <import resource="classpath:spring/spring_empt.xml"/> 
+                            
+                           
+</beans>

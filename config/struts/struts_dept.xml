@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+     "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+     "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="dept" extends="struts-default" namespace="/dept">
+		<!-- 配置过滤器 -->
+		<interceptors>
+			<!-- 先声明 -->
+			<interceptor name="i1" class="interceptor"></interceptor>
+			<!-- 再使用 -->
+			<interceptor-stack name="i2">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="i1"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!-- 设置为全包通用 -->
+		<default-interceptor-ref name="i2"></default-interceptor-ref>
+		
+		<!-- 通用友好异常界面 -->
+		<global-results>
+			<result name="catchError" type="redirect">/a.jsp</result>
+			<result name="error" type="redirect">/user/login.jsp</result>
+		</global-results>
+		
+		<action name="dept_*" class="deptAction" method="{1}">
+			<result name="queryAllOk" type="dispatcher">/dept/deptlist.jsp</result>
+			<result name="addOk" type="redirect">dept_queryAll</result>
+			<result name="deleteOk" type="redirect">dept_queryAll</result>
+			<result name="huifuOk" type="redirect">dept_queryAll</result>
+			<result name="selectOneOk" type="dispatcher">/dept/updateDept.jsp</result>
+			<result name="updateOk" type="redirect">dept_queryAll</result>
+			<result name="queryAllEmptsOk" type="dispatcher">/emp/emplist.jsp</result>
+		</action>
+		
+	</package>
+
+
+ 
+</struts>

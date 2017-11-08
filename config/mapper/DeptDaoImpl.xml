@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongkeruan.dao.DeptDao">
+	
+	<resultMap type="dept" id="d1">
+		<id column="deptId" property="id"/>
+		<result column="deptName" property="name"/>
+		<collection property="list" ofType="empt">
+			<id column="emptId" property="id"/>
+			<result column="emptName" property="name"/>		
+		</collection>
+	</resultMap>
+	
+	<sql id=""></sql>
+	
+	<insert id="add" parameterType="dept" >
+		insert into a_dept
+		values(#{id},#{name})
+	</insert>
+	
+	<delete id="delete" parameterType="String">
+		delete from a_dept where id=#{a}
+	</delete>
+	
+	<update id="update" parameterType="dept">
+		update  a_dept
+		set name=#{name} where id=#{id} 
+	</update>
+	
+	<select id="selectDept" parameterType="String" resultType="dept">
+		select id,name from a_dept where id=#{a}
+	</select>
+	
+	<select id="selectEmpt" parameterType="String" resultMap="d1">
+		select d1.id as deptId,d1.name as deptName,d2.id as emptId,d2.name as emptName
+		from a_dept d1 left join a_empt d2
+		on d1.id=d2.parentId
+		where d1.id=#{a}
+	</select>
+	
+	<select id="selectAll" resultType="dept">
+		select id,name from a_dept
+	</select>
+	
+</mapper>

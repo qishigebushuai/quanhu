@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongkeruan.dao.UserDao">
+	<!-- 查询用户 -->
+	<select id="selectUser" parameterType="String" resultType="user">
+		select id ,username as userName,password,realname as realName from a_user where username=#{a}
+	</select>
+	
+	<!-- 添加用户 -->
+	<insert id="addUser" parameterType="user">
+		insert into a_user
+		values(#{id},#{userName},#{password},#{realName})
+	</insert>
+	
+</mapper>
